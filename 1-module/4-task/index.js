@@ -1,5 +1,5 @@
 function checkSpam(str) {
-  if( str.includes("1XbeT") || str.includes("xxx") ){
+  if( str.match(/1XbeT/i) || str.match(/xxx/i) ){
     return true
   }
   return false;
