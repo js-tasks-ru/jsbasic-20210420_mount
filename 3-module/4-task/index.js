@@ -1,11 +1,8 @@
 function showSalary(users, age) {
-  let resultString = '';
-  users.forEach(item =>{
-    if(item.age <= age){
-      let thisName = item.name,
-            thisBalance = item.balance;
-      resultString += `${thisName}, ${thisBalance}\n`
-    }
-  })
-  return resultString.substring(0, resultString.length - 1)
+  let resultString = users
+                          .filter(user => {return user.age <= age})
+                          .map(user => {return `${user.name}, ${user.balance}\n`} )
+                          .join('');
+                          
+  return resultString.substring(0, resultString.length - 1);
 }

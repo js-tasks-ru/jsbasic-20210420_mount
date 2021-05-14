@@ -1,7 +1,6 @@
 function namify(users) {
-  const newArray = [];
-  users.forEach(element => {
-    newArray.push(element.name)
+  let userNames = users.map(element => {
+    return element.name;
   });
-  return newArray;
+  return userNames;
 }

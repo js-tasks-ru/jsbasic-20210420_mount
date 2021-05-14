@@ -1,7 +1,7 @@
 function sumSalary(salaries) {
   let summ = 0;
-  for (item in salaries){
-    if (typeof (salaries[item]) === 'number' && salaries[item] / salaries[item] ){
+  for (const item in salaries){
+    if ( isFinite(salaries[item]) ){
       summ = summ + salaries[item];
     }
   }

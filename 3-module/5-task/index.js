@@ -4,9 +4,9 @@ function getMinMax(str) {
   let maxVal = minVal;
 
   for (let i = 0; i < destrArray.length; i++) {
-    let e = +destrArray[i];
-    if (e < minVal) minVal = e;
-    if (e > maxVal) maxVal = e;
+    let arrayElement = +destrArray[i];
+    if (arrayElement < minVal) minVal = arrayElement;
+    if (arrayElement > maxVal) maxVal = arrayElement;
   }
   return {min: minVal, max: maxVal};
 }
