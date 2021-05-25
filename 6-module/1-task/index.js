@@ -50,13 +50,11 @@
             ${this.constructData()}
         </tbody>
     `
-    let buttonList = table.querySelectorAll('button');
-    buttonList.forEach(button =>{
-      button.addEventListener('click', function(){
-        button.closest('tr').remove();
-        this.removeEventListener('click',this)
-      })
-    });
+    table.onclick = function(e){
+      let target = e.target;
+      if (target.tagName != 'BUTTON') return;
+      target.closest('tr').remove();
+    }
     return table;
   }
 }
