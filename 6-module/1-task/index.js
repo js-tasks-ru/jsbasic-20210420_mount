@@ -20,20 +20,20 @@
     this.elem = this.initTable();
   }
   constructData(){
-    let rowsList = '';
-    this.rows.forEach(function(row, index) {
-      rowsList += `
-      <tr>
-        <td>${row.name}</td>
-        <td>${row.age}</td>
-        <td>${row.salary}</td>
-        <td>${row.city}</td>
-        <td><button>X</button></td>
-      </tr>
-      `
-    });
+    let rowsList = this.rows.map(function(row){
+        return `
+              <tr>
+                <td>${row.name}</td>
+                <td>${row.age}</td>
+                <td>${row.salary}</td>
+                <td>${row.city}</td>
+                <td><button>X</button></td>
+              </tr>
+        `
+    }).join('');
     return rowsList;
   }
+
   initTable(){
     let table = document.createElement('table');
     table.innerHTML = `
@@ -50,11 +50,15 @@
             ${this.constructData()}
         </tbody>
     `
+    this.removeRow(table);
+    return table;
+  }
+  
+  removeRow(table){
     table.onclick = function(e){
       let target = e.target;
       if (target.tagName != 'BUTTON') return;
       target.closest('tr').remove();
     }
-    return table;
   }
 }
