@@ -6,9 +6,9 @@ export default class Carousel {
     this.elem = this.render();
   }
   sliderTemplate(){
-    let carouselElem = document.createElement('div');
-    carouselElem.classList.add("carousel");
-    carouselElem.innerHTML = `
+    let carouselBody = document.createElement('div');
+    carouselBody.classList.add("carousel");
+    carouselBody.innerHTML = `
       <div class="carousel__arrow carousel__arrow_right">
         <img src="/assets/images/icons/angle-icon.svg" alt="icon">
       </div>
@@ -17,10 +17,11 @@ export default class Carousel {
       </div>
       <div class="carousel__inner"></div>
     `
-    let carouselInner = carouselElem.querySelector('.carousel__inner');
-    return {carouselElem, carouselInner};
+    let carouselInner = carouselBody.querySelector('.carousel__inner');
+    return {carouselBody, carouselInner};
   }
-  makeSlidesList(carouselInner){
+  
+  makeSlidesList(){
     let slidesArray = this.slides.map(function(slide){
       return `<div class="carousel__slide" data-id="${slide.id}">
               <img src="/assets/images/carousel/${slide.image}" class="carousel__img" alt="slide">
@@ -40,45 +41,40 @@ export default class Carousel {
     let slider = this.sliderTemplate();
     slider.carouselInner.innerHTML = this.makeSlidesList(slider.carouselInner);
 
-    setTimeout(() => {
-      this.initCarousel(slider.carouselElem);
-      this.clickGenerator(slider.carouselElem);
-    }, 0);
+    this.initCarousel(slider.carouselBody);
+    this.addEventListeners(slider.carouselBody);
 
-    
-
-    return slider.carouselElem;
+    return slider.carouselBody;
   }
 
   initCarousel(carousel) {
     let data = {
         sliderBody: carousel.querySelector('.carousel__inner'),
-        itemWidth: carousel.querySelector('.carousel__slide').offsetWidth,
         carouselPrev: carousel.querySelector('.carousel__arrow_left'),
         carouselNext: carousel.querySelector('.carousel__arrow_right'),
         slideCount: carousel.querySelectorAll('.carousel__slide').length,
         currentSlide: carousel.querySelectorAll('.carousel__slide').length,
     }
+    
     data.carouselPrev.addEventListener('click', this.prevSlide.bind(this,data));
     data.carouselNext.addEventListener('click', this.nextSlide.bind(this,data));
-
+    
     this.showArrows(data);
   }
-
   nextSlide(data){
+    let itemWidth = data.sliderBody.querySelector('.carousel__slide').offsetWidth;
     if( data.currentSlide > 0){
       data.currentSlide--;
-      data.sliderBody.style.transform = `translateX(-${ (data.slideCount - data.currentSlide) * data.itemWidth}px)`
+      data.sliderBody.style.transform = `translateX(-${ (data.slideCount - data.currentSlide) * itemWidth}px)`
       this.showArrows(data);
     }
   }
-
   prevSlide(data){
+      let itemWidth = data.sliderBody.querySelector('.carousel__slide').offsetWidth;
       data.currentSlide++;
-      data.sliderBody.style.transform = `translateX(-${ (data.slideCount - data.currentSlide) * data.itemWidth}px)`
+      data.sliderBody.style.transform = `translateX(-${ (data.slideCount - data.currentSlide) * itemWidth}px)`
       this.showArrows(data);
   }
-
   showArrows(data){
     if(data.currentSlide == data.slideCount){
       data.carouselPrev.style.display = 'none'
@@ -94,25 +90,20 @@ export default class Carousel {
     }
   }
 
-  clickGenerator(carousel){
+  addEventListeners(carousel){
     let corouselItems = carousel.querySelectorAll('.carousel__button');
-    let classFlag = this;
+
     for(let item of corouselItems){
-      item.onclick = function(event){
-        let currentItem = this;
-        let productId = this.closest('[data-id]').getAttribute('data-id');
-        classFlag.userEvent(currentItem,productId)
-      }
+      item.addEventListener('click', this._clickGenerator.bind(this))
     }
   }
 
-  userEvent(currentItem,productId){
-    currentItem.addEventListener('click', function(e){
-      main.dispatchEvent(
-        new CustomEvent("product-add", { 
-            detail: productId, 
-            bubbles: true 
-      }));
+  _clickGenerator(event){
+    let productId = event.target.closest('[data-id]').getAttribute('data-id');
+    let generationEvent = new CustomEvent("product-add", { 
+      detail: productId, 
+      bubbles: true 
     })
+    this.elem.dispatchEvent(generationEvent);
   }
 }
