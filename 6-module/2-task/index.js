@@ -6,7 +6,6 @@ export default class ProductCard {
     this.elem = this.render();
   }
   render(){
-    let main = document.createElement('div');
     let productCard = `
       <div class="card">
         <div class="card__top">
@@ -20,23 +19,22 @@ export default class ProductCard {
           </button>
         </div>
       </div>`
-    
-    main.innerHTML = productCard;
-    this.clickGenerator(main)
-    
+    let main = createElement(productCard);
+    this.addEventListeners(main)
+
     return main;
   }
 
-  clickGenerator(main){
+  addEventListeners(main) {
     let button = main.querySelector('.card__button')
-    let productId = this.product.id;
-    
-    button.addEventListener('click', function(e){
-      main.dispatchEvent(
-        new CustomEvent("product-add", { 
-            detail: productId, 
-            bubbles: true 
-      }));
-    })
+    button.addEventListener('click', this._clickGenerator.bind(this,this.product,main));
+  }
+
+  _clickGenerator(event,main){
+    main.dispatchEvent(
+      new CustomEvent("product-add", { 
+          detail: this.product.id, 
+          bubbles: true 
+    }));
   }
 }

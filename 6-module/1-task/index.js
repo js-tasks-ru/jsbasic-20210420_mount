@@ -50,15 +50,15 @@
             ${this.constructData()}
         </tbody>
     `
-    this.removeRow(table);
+    this.addTableEventsListeners(table)
     return table;
   }
-  
-  removeRow(table){
-    table.onclick = function(e){
-      let target = e.target;
+  addTableEventsListeners(table) {
+    table.addEventListener('click', this._removeRow);
+  }
+  _removeRow(event){
+      let target = event.target;
       if (target.tagName != 'BUTTON') return;
       target.closest('tr').remove();
-    }
   }
 }
